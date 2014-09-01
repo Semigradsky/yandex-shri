@@ -28,16 +28,6 @@
           width: 300px;
           height: 300px;
       }
-      .equalizer span {
-          vertical-align: bottom;
-          display: inline-block;
-
-          font-size: 0;
-          line-height: 0;
-
-          background: pink;
-          border-top: 2px solid red;
-      }
     </style>
     <script>
       function setEqualizer(selector, timeout, colWidth) {
@@ -55,7 +45,14 @@
           for (var i = 0; i < cols.length; i++) {
               var span = $('<span/>').appendTo(selector);
               span.css({
-                  width: colWidth
+                  verticalAlign: 'bottom',
+                  display: 'inline-block',
+                  fontSize: 0,
+                  lineHeight: 0,
+
+                  width: colWidth,
+                  background: 'pink',
+                  borderTop: '2px solid red'
               });
           }
       
@@ -68,20 +65,13 @@
               $(this).height(colHeight);
           });
 
-          var colsCount = cols.length,
-              currentColumn = 0;
-          cols.animate(
+          $.when(cols.animate(
               { height: containerHeight/2 },
-              {
-                  duration: timeout,
-                  easing: 'linear',
-                  complete: function() {
-                      if (++currentColumn === colsCount) {
-                          run_equalizer(containerHeight, cols, timeout);
-                      }
-                  }
-              }
-          );
+              timeout,
+              'linear'
+          ).promise()).done(function() {
+              run_equalizer(containerHeight, cols, timeout);
+          });
       }
       
       window.onload = function () {
