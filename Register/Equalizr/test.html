@@ -28,6 +28,16 @@
           width: 300px;
           height: 300px;
       }
+      .equalizer span {
+          vertical-align: bottom;
+          display: inline-block;
+
+          font-size: 0;
+          line-height: 0;
+
+          background: pink;
+          border-top: 2px solid red;
+      }
     </style>
     <script>
       function setEqualizer(selector, timeout, colWidth) {
@@ -45,33 +55,31 @@
           for (var i = 0; i < cols.length; i++) {
               var span = $('<span/>').appendTo(selector);
               span.css({
-                  verticalAlign: 'bottom',
-                  display: 'inline-block',
-      
-                  fontSize: 0,
-                  lineHeight: 0,
-      
-                  width: colWidth,
-                  background: 'pink',
-                  borderTop: '2px solid red'
+                  width: colWidth
               });
           }
       
-          run_equalizer(selector, timeout);
+          run_equalizer($(selector).height(), $(selector + ' span'), timeout);
       }
-      
-      function run_equalizer (selector, timeout) {
-          $(selector + ' span').each(function (i) {
-              var colHeight = Math.round($(selector).height() * Math.random());
+
+      function run_equalizer (containerHeight, cols, timeout) {
+          cols.each(function () {
+              var colHeight = Math.round(containerHeight * Math.random());
               $(this).height(colHeight);
           });
-      
-          $(selector + ' span').animate(
-              {height: $(selector).height()/2},
-              timeout,
-              'linear',
-              function () {
-                  run_equalizer(selector, timeout);
+
+          var colsCount = cols.length,
+              currentColumn = 0;
+          cols.animate(
+              { height: containerHeight/2 },
+              {
+                  duration: timeout,
+                  easing: 'linear',
+                  complete: function() {
+                      if (++currentColumn === colsCount) {
+                          run_equalizer(containerHeight, cols, timeout);
+                      }
+                  }
               }
           );
       }
