@@ -29,57 +29,6 @@
           height: 300px;
       }
     </style>
-    <script>
-      function setEqualizer(selector, timeout, colWidth) {
-          if (!colWidth) {
-              colWidth = 1;
-          }
-          $(selector).css({
-              verticalAlign: 'bottom',
-              lineHeight: $(selector).height() + 'px'
-          });
-      
-          // Кол-во столбиков
-          var colQuantity = Math.ceil($(selector).width()/colWidth);
-          var cols = new Array(colQuantity);
-          for (var i = 0; i < cols.length; i++) {
-              var span = $('<span/>').appendTo(selector);
-              span.css({
-                  verticalAlign: 'bottom',
-                  display: 'inline-block',
-                  fontSize: 0,
-                  lineHeight: 0,
-
-                  width: colWidth,
-                  background: 'pink',
-                  borderTop: '2px solid red'
-              });
-          }
-      
-          run_equalizer($(selector).height(), $(selector + ' span'), timeout);
-      }
-
-      function run_equalizer (containerHeight, cols, timeout) {
-          cols.each(function () {
-              var colHeight = Math.round(containerHeight * Math.random());
-              $(this).height(colHeight);
-          });
-
-          $.when(cols.animate(
-              { height: containerHeight/2 },
-              timeout,
-              'linear'
-          ).promise()).done(function() {
-              run_equalizer(containerHeight, cols, timeout);
-          });
-      }
-      
-      window.onload = function () {
-          setEqualizer('#eq_1 .equalizer', 1000, 2);
-          setEqualizer('#eq_2 .equalizer', 1000, 2);
-          setEqualizer('#eq_3 .equalizer', 1000, 2);
-      }
-    </script>
   </head>
   <body>
     <h1>Equalizers</h1>
@@ -95,5 +44,15 @@
       <h2>Third</h2>
       <div class="equalizer big"></div>
     </div>
+
+    <script type="text/javascript" src="jquery.equalizr.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            var a = $('#eq_1 .equalizer, #eq_2 .equalizer, #eq_3 .equalizer').equalizr({
+                timeout: 1000,
+                colWidth: 2
+            });
+        }
+    </script>
   </body>
 </html>
