@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Popup</title>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            position: relative;
+        }
+
+        .popup-container {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        .popup-content {
+            padding: 20px;
+            background-color: #FD0;
+            max-height: 50%;
+            width: 50%;
+            overflow: auto;
+            margin: 0 auto;
+        }
+        .popup-content p {
+            margin: 0 0 10px;
+        }
+
+        .transform {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%,-50%);
+            transform: translate(-50%,-50%);
+        }
+
+        .table {
+            display: table;
+        }
+        .table-cell {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .flexbox {
+            display: -webkit-box;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-align: center;
+            -moz-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -moz-box-pack: center;
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+        }
+    </style>
+    <script src="jquery-1.11.1.min.js"></script>
+</head>
+<body>
+<script>
+    $(function() {
+        var LOREM_IPSUM = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab accusamus atque dolores, esse est excepturi facere incidunt iusto minus necessitatibus neque quas quasi quod rerum temporibus totam vero voluptatem.';
+
+        var popups = $('.popup-container');
+        popups.hide().click(function() {
+            popups.hide();
+        });
+        $('.popup-content').click(function(e) {
+            e.stopPropagation();
+        });
+
+        $('button').click(function() {
+            popups.hide();
+            $('#popup-' + $(this).data('popup')).show();
+        });
+
+        $('.add-content').click(function(e) {
+            e.preventDefault();
+            $(this).after('<p>' + LOREM_IPSUM + '</p><p>' + LOREM_IPSUM + '</p><p>' + LOREM_IPSUM + '</p><p>' + LOREM_IPSUM + '</p><p>' + LOREM_IPSUM + '</p>');
+        })
+    });
+</script>
+
+    <button data-popup="transform">Transform</button>
+    <button data-popup="table">Table</button>
+    <button data-popup="flexbox">Flexbox</button>
+
+
+    <div id="popup-transform" class="popup-container">
+        <div class="popup-content transform">
+            <ul>Плюсы:
+                <li>Минимум необходимого кода</li>
+            </ul>
+            <ul>Минусы:
+                <li>Не работает в IE8-</li>
+                <li>Может мешать другим transform эффектам</li>
+                <li>В некоторых случаях могут быть размытые края и текст</li>
+            </ul>
+            <a href="#" class="add-content">Add content...</a>
+        </div>
+    </div>
+
+    <div id="popup-table" class="popup-container table">
+        <div class="table-cell">
+            <div class="popup-content">
+                <ul>Плюсы:
+                    <li>Хорошая кроссбраузерная поддержка</li>
+                </ul>
+                <ul>Минусы:
+                    <li>Требуется дополнительный HTML код</li>
+                </ul>
+                <a href="#" class="add-content">Add content...</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup-flexbox" class="popup-container flexbox">
+        <div class="popup-content">
+            <ul>Плюсы:
+                <li>Метод будущего, все очень просто</li>
+            </ul>
+            <ul>Минусы:
+                <li>Не работает в IE9-</li>
+            </ul>
+            <a href="#" class="add-content">Add content...</a>
+        </div>
+    </div>
+
+</body>
+</html>
