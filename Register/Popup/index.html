@@ -12,10 +12,19 @@
         body {
             position: relative;
         }
+        .overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: white;
+            opacity: 0.5;
+        }
 
         .popup-container {
-            height: 100%;
-            width: 100%;
             position: absolute;
             top: 0;
             bottom: 0;
@@ -29,7 +38,6 @@
             max-height: 50%;
             width: 50%;
             overflow: auto;
-            margin: 0 auto;
         }
         .popup-content p {
             margin: 0 0 10px;
@@ -45,10 +53,15 @@
 
         .table {
             display: table;
+            height: 100%;
+            width: 100%;
         }
-        .table-cell {
+        .table .table-cell {
             display: table-cell;
             vertical-align: middle;
+        }
+        .table .popup-content {
+            margin: 0 auto;
         }
 
         .flexbox {
@@ -68,6 +81,25 @@
             -webkit-justify-content: center;
             justify-content: center;
         }
+
+        .inline-block-container {
+            width: 50%;
+            height: 100%;
+            margin: 0 auto;
+        }
+        .inline-block-container:before {
+            display: inline-block;
+            vertical-align: middle;
+            content: '';
+            width: 0;
+            height: 100%;
+        }
+        .inline-block-container .popup-content {
+            width: 100%;
+            display: inline-block;
+            vertical-align: middle;
+            box-sizing: border-box;
+        }
     </style>
     <script src="jquery-1.11.1.min.js"></script>
 </head>
@@ -76,9 +108,11 @@
     $(function() {
         var LOREM_IPSUM = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab accusamus atque dolores, esse est excepturi facere incidunt iusto minus necessitatibus neque quas quasi quod rerum temporibus totam vero voluptatem.';
 
-        var popups = $('.popup-container');
+        var popups = $('.popup-container'),
+                overlay = $('#overlay');
         popups.hide().click(function() {
             popups.hide();
+            overlay.hide();
         });
         $('.popup-content').click(function(e) {
             e.stopPropagation();
@@ -86,6 +120,7 @@
 
         $('button').click(function() {
             popups.hide();
+            overlay.show();
             $('#popup-' + $(this).data('popup')).show();
         });
 
@@ -96,23 +131,29 @@
     });
 </script>
 
+    <div>Варианты создания динамического попапа (нажимайте кнопки для просмотра):</div>
+
     <button data-popup="transform">Transform</button>
     <button data-popup="table">Table</button>
     <button data-popup="flexbox">Flexbox</button>
+    <button data-popup="inline-block">Inline-block</button>
 
+    <div>Кроме выше представленных есть еще вариант изменять размеры попапа и позиционировать с помощью JS, но это совсем грустно.</div>
+
+    <div id="overlay" class="overlay"></div>
 
     <div id="popup-transform" class="popup-container">
         <div class="popup-content transform">
             <h2>Transform</h2>
             <p>Для вертикального выравнивания используется совмещение абсолютного позиционирования и трансформации.</p>
-            <ul>Плюсы:
+            <ol>Плюсы:
                 <li>Минимум необходимого кода</li>
-            </ul>
-            <ul>Минусы:
+            </ol>
+            <ol>Минусы:
                 <li>Не работает в IE8-</li>
                 <li>Может мешать другим transform эффектам</li>
                 <li>В некоторых случаях могут быть размытые края и текст</li>
-            </ul>
+            </ol>
             <a href="#" class="add-content">Add content...</a>
         </div>
     </div>
@@ -122,12 +163,12 @@
             <div class="popup-content">
                 <h2>Table</h2>
                 <p>Для вертикального выравнивания применяется свойство vertical-align, которое выравнивает контент в таблице.</p>
-                <ul>Плюсы:
+                <ol>Плюсы:
                     <li>Хорошая кроссбраузерная поддержка</li>
-                </ul>
-                <ul>Минусы:
+                </ol>
+                <ol>Минусы:
                     <li>Требуется дополнительный HTML код</li>
-                </ul>
+                </ol>
                 <a href="#" class="add-content">Add content...</a>
             </div>
         </div>
@@ -137,14 +178,41 @@
         <div class="popup-content">
             <h2>Flexbox</h2>
             <p>Специальное решение для вертикального выравнивания в любом блоке, без костылей.</p>
-            <ul>Плюсы:
+            <ol>Плюсы:
                 <li>Верстка будущего, все очень просто</li>
-            </ul>
-            <ul>Минусы:
+            </ol>
+            <ol>Минусы:
                 <li>Не работает в IE9-</li>
-            </ul>
+            </ol>
             <a href="#" class="add-content">Add content...</a>
         </div>
+    </div>
+
+    <div id="popup-inline-block" class="popup-container">
+        <div class="inline-block-container"><!--
+        --><div class="popup-content inline-block-content">
+                <h2>Inline-block</h2>
+                <p></p>
+                <ol>Плюсы:
+                    <li>Работает в IE7+</li>
+                </ol>
+                <ol>Минусы:
+                    <li>Для того, чтобы работало в IE7 нужно вместо .inline-block-container:before использовать отдельный html элемент для выравнивания. + хак на inline-block</li>
+                    <li>Чтобы не мешал оступ в несколько пикселей (который добавляет браузер для inline-block элементов) нужно:
+                        <ul>
+                            <li>Делать отрицательный отступ в несколько пикселей</li>
+                            <li>Или убирать все пробелльные символы между блоками</li>
+                            <li>Или ставить кооментарии как в этом примере, чтобы не было между блоками пробельных символов</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Нужен дополнительный контейнер для того, чтобы задать ширину, иначе margin: 0 auto не работает (потому что у нас не один элемент, которому нужно задать ширину, а теперь два - тот по которому выравниваем вертикально).
+                    </li>
+                </ol>
+                <a href="#" class="add-content">Add content...</a>
+            </div>
+        </div>
+
     </div>
 
 </body>
