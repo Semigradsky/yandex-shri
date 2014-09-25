@@ -9,21 +9,33 @@
             height: 100%;
             background-color: #FFF8DC;
             margin: 0;
+            cursor: crosshair;
         }
 
         div {
             width: 0;
             height: 0;
-            border: 10px solid black;
-            border-radius: 10px;
             position: absolute;
             top: 0px;
             left: 0px;
-            color: rgb(255, 0, 0);
+        }
+        div span {
+            display: block;
+            width: 0;
+            height: 0;
+            border: 20px solid transparent;
+            border-radius: 20px;
+            border-color: red;
         }
     </style>
 </head>
 <body>
+    <span>"Кружки" сделаны с помощью div, т.е. DOM элементы, не SVG.
+        Смоделировано броуновское движение, т.е. "кружки" хаотически движутся вследствии соударений с невидимыми молекулами газа или жидкости.
+        "Кружки" также меняют направление движения от контакта с курсором мыши.
+        Скорость смены цвета, направления движения, расстояние движения, количество кружков, их размер - заданы в костантах, можно поиграться.
+    </span>
+
 
 <script src="d3.js"></script>
 <script src="main.js"></script>
