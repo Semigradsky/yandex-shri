@@ -1,10 +1,10 @@
 (function() {
 
-    var COUNT_CIRCLES = 20, // count
+    var COUNT_CIRCLES = 40, // count
         DEFAULT_CHANGE_COLOR_DURATION = 2000, // ms
-        MOTION_DURATION = 100, // ms
-        MOTION_DISTANCE = 20, // px
-        CIRCLE_DIAMETER = 20; // px
+        MOTION_DURATION = 400, // ms
+        MOTION_DISTANCE = 60, // px
+        CIRCLE_DIAMETER = 40; // px
     
     var minLeftPos = 0,
         maxLeftPos = document.body.clientWidth - CIRCLE_DIAMETER,
@@ -12,13 +12,31 @@
         maxTopPos = document.body.clientHeight - CIRCLE_DIAMETER;
 
     var body = d3.select('body'),
-        data = generateData(),
-        circles = body.selectAll('div').data(data).enter().append('div');
+        data = generateStartData(),
+        circles = body.selectAll('div').data(data).enter().append('div'),
+        circlesColors = circles.append('span'),
+        mouseCoordinates = [0, 0];
+
+    body.on("mousemove", function() {
+        mouseCoordinates = d3.mouse(this);
+    });
+
+    circles.on("mousemove", function() {
+        var circle = d3.select(this),
+            data = circle.data()[0];
+
+        circle.datum(generateNewData(data));
+        applyData(circle.transition());
+    });
+
     applyData(circles);
     
     circles.each(function() {
         var circle = d3.select(this);
         animateMotion(circle);
+    });
+    circlesColors.each(function() {
+        var circle = d3.select(this);
         animateChangeColor(circle);
     });
 
@@ -44,11 +62,12 @@
         newTopPos = Math.max(minTopPos, Math.min(maxTopPos, newTopPos));
         
         return {
+            id: oldData.id,
             x: newLeftPos,
             y: newTopPos
         };
     }
-    
+
     function applyData(el) {
         el.style('left', function(data) {
             return data.x + 'px';
@@ -61,20 +80,21 @@
 
     function animateChangeColor(circle) {
         var duration = DEFAULT_CHANGE_COLOR_DURATION * Math.random(),
-            newColor = circle.style('border-color') === 'rgb(255, 0, 0)' ? 'rgb(255, 255, 0)' : 'rgb(255, 0, 0)';
-        
+            newColor = Math.random() > 0.5 ? 'yellow' : 'red';
+
         circle
             .transition()
             .duration(duration)
-            .ease('linear')
             .style('border-color', newColor);
+
         setTimeout(function() { animateChangeColor(circle); }, duration);
     }
     
-    function generateData() {
+    function generateStartData() {
         var data = [];
         for (var i = COUNT_CIRCLES; i--;) {
             data.push({
+                id: 'id_' + i,
                 x: random(minLeftPos, maxLeftPos),
                 y: random(minTopPos, maxTopPos)
             });
