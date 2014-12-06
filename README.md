@@ -5,4 +5,4 @@
 
 Курсовой проект - создание совместного текстового редактора для программистов.
 
-[Репозиторий](https://github.com/Semigradsky/team-2)
+[Репозиторий](https://github.com/Semigradsky/MeepoX)
